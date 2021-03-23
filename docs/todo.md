@@ -22,3 +22,8 @@ Average is 18th of the month
     of the previous dates.
   - When a JDK version reaches GA and today's date has passed that
     date then look at the next Java version.
+    
+## Users to Follow
+
+- @java
+- @jhy (jsoup author)

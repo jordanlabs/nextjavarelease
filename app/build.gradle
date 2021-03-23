@@ -6,16 +6,26 @@ plugins {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
 
-dependencies {
-    testImplementation 'org.assertj:assertj-core:3.19.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+apply from: 'dependency-versions.gradle'
 
-    implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.google.guava:guava:30.1-jre'
+dependencies {
+    implementation "com.github.redouane59.twitter:twittered:$twitteredVersion"
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "org.apache.logging.log4j:log4j-api:$log4j2Version"
+    implementation "org.apache.logging.log4j:log4j-core:$log4j2Version"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    testImplementation "com.flextrade.jfixture:jfixture:2.7.2"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
 
 application {

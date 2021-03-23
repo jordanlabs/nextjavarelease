@@ -14,6 +14,10 @@ public class Feature implements Comparable<Feature> {
         this.featureStatus = featureStatus;
     }
 
+    public int jepNumber() {
+        return jepNumber;
+    }
+
     @Override
     public int compareTo(final Feature other) {
         return Integer.compare(jepNumber, other.jepNumber);

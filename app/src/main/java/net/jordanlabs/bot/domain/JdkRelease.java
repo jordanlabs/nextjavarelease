@@ -30,7 +30,7 @@ public class JdkRelease {
             return true;
         }
         for (final Milestone milestone : milestones) {
-            if (milestone.isGenerallyAvailable() && milestone.milestoneDate().isAfter(date)) {
+            if (milestone.isGenerallyAvailable() && milestone.isAfter(date)) {
                 return true;
             }
         }

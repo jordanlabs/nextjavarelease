@@ -7,10 +7,13 @@ import net.jordanlabs.bot.domain.Milestone;
 import net.jordanlabs.bot.domain.Phase;
 import net.jordanlabs.bot.extractor.feature.FeatureExtractor;
 import net.jordanlabs.bot.extractor.feature.Features;
+import net.jordanlabs.bot.provider.HtmlParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,15 +25,17 @@ import java.util.Objects;
 
 import static net.jordanlabs.bot.domain.Milestone.MILESTONE_DATE_FORMAT;
 
+@Singleton
 public class JdkProgressFetcher {
-    private final String jdkProjectUrl;
+    private final HtmlParser htmlParser;
 
-    public JdkProgressFetcher(final String jdkProjectUrl) {
-        this.jdkProjectUrl = jdkProjectUrl;
+    @Inject
+    public JdkProgressFetcher(final HtmlParser htmlParser) {
+        this.htmlParser = htmlParser;
     }
 
-    public JdkProgress fetchProgress() throws IOException {
-        final Document doc = Jsoup.connect(jdkProjectUrl).get();
+    public JdkProgress fetchProgress(final String jdkProjectUrl) throws IOException {
+        final Document doc = htmlParser.loadDocumentFrom(jdkProjectUrl);
         final Element releases = doc.selectFirst("div#main > ul");
         final List<JdkRelease> jdkReleases = new ArrayList<>();
         for (Element release : releases.select("li")) {

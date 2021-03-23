@@ -2,6 +2,7 @@ package net.jordanlabs.bot.service;
 
 import net.jordanlabs.bot.domain.ReleaseDate;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -11,6 +12,10 @@ public class ProgressAnnouncer {
     private static final String FILLED = "⬛";
     private static final String EMPTY = "⬜";
     private static final StringBuffer sb = new StringBuffer();
+
+    @Inject
+    public ProgressAnnouncer() {
+    }
 
     // ⬛⬛⬛⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜ 40%
     public String generateProgressBar(final LocalDate startDate, final LocalDate todayDate, final ReleaseDate releaseDate) {

@@ -1,31 +1,27 @@
 package net.jordanlabs.bot;
 
-import net.jordanlabs.bot.domain.JdkProgress;
-import net.jordanlabs.bot.domain.JdkRelease;
-import net.jordanlabs.bot.service.JdkProgressFetcher;
-import net.jordanlabs.bot.service.ProgressAnnouncer;
+import com.github.redouane59.twitter.TwitterClient;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.Optional;
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        final String jdkProjectUrl = "https://openjdk.java.net/projects/jdk/";
-        final JdkProgressFetcher jdkProgressFetcher = new JdkProgressFetcher(jdkProjectUrl);
-        final JdkProgress jdkProgress = jdkProgressFetcher.fetchProgress();
+    public static void main(String[] args)  {
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+        TwitterClient twitterClient = new TwitterClient();
+        final var nextJavaRelease = NextJavaReleaseFactory.createNextJavaRelease();
+        try {
+            nextJavaRelease.runTwitterBot();
+        } catch (IOException ex) {
+           System.out.println("Failed");
+        }
+    }
 
-        final LocalDate todayDate = LocalDate.now(ZoneOffset.UTC);
-        final Optional<JdkRelease> nextJavaRelease = jdkProgress.nextJavaRelease(todayDate);
-
-        final ProgressAnnouncer progressAnnouncer = new ProgressAnnouncer();
-        nextJavaRelease.ifPresent(jdkRelease -> {
-            final String progressBar = progressAnnouncer.generateProgressBar(
-                jdkRelease.previousReleaseDate(),
-                todayDate,
-                jdkRelease.releaseDateOrEstimate(jdkProgress.averageReleaseDayOfMonth()));
-            System.out.println(progressBar);
-        });
+    public static class ShutdownHook extends Thread {
+        @Override
+        public void run() {
+            // stop any running threads
+            // write down current state
+            // release any resources
+        }
     }
 }
