@@ -33,7 +33,7 @@ public class Milestone implements Comparable<Milestone>{
     }
 
     public boolean isAfter(final LocalDate date) {
-        return date.isAfter(date);
+        return milestoneDate.isAfter(date);
     }
 
     @Override

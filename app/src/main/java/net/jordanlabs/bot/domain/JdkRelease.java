@@ -8,21 +8,24 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class JdkRelease {
+    public static final LocalDate NO_RELEASE_DATE = LocalDate.EPOCH;
     private final String releaseUrl;
     private final String latestMilestone;
     private final String releaseNumber;
     private final Set<Milestone> milestones = new TreeSet<>();
     private final Set<Feature> features = new TreeSet<>();
+    private final LocalDateTime pageLastUpdated;
 
     private JdkRelease previousRelease;
     private JdkRelease nextRelease;
 
-    public JdkRelease(final String releaseUrl, final String releaseNumber, final String latestMilestone, final List<Milestone> milestones, final List<Feature> features, final LocalDateTime lastUpdated) {
+    public JdkRelease(final String releaseUrl, final String releaseNumber, final String latestMilestone, final List<Milestone> milestones, final List<Feature> features, final LocalDateTime pageLastUpdated) {
         this.releaseUrl = releaseUrl;
         this.releaseNumber = releaseNumber;
         this.latestMilestone = latestMilestone;
         this.milestones.addAll(milestones);
         this.features.addAll(features);
+        this.pageLastUpdated = pageLastUpdated;
     }
 
     public boolean isReleasedAfter(final LocalDate date) {
@@ -61,14 +64,13 @@ public class JdkRelease {
                 return milestone.milestoneDate();
             }
         }
-        return LocalDate.EPOCH;
+        return NO_RELEASE_DATE;
     }
 
     public int releaseDayOfMonth() {
-        for (final Milestone milestone : milestones) {
-            if (milestone.isGenerallyAvailable()) {
-                return milestone.milestoneDate().getDayOfMonth();
-            }
+        final var releaseDate = releaseDate();
+        if (releaseDate != NO_RELEASE_DATE) {
+            return releaseDate.getDayOfMonth();
         }
         return 0;
     }

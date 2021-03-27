@@ -30,6 +30,7 @@ public class JdkProgress {
     }
 
     public int averageReleaseDayOfMonth() {
+        // TODO: Would be more accurate to average time between releases
         final OptionalDouble averageReleaseDay = jdkReleases
             .stream()
             .mapToInt(JdkRelease::releaseDayOfMonth)

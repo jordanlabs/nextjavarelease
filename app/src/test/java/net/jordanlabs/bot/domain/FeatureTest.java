@@ -13,9 +13,9 @@ public class FeatureTest {
     void featuresSortByJepNumber() {
         // Given
         var features = new ArrayList<>(List.of(
-            new Feature(3, "", "", FeatureStatus.INCLUDED_IN_JDK),
-            new Feature(1, "", "", FeatureStatus.INCLUDED_IN_JDK),
-            new Feature(2, "", "", FeatureStatus.INCLUDED_IN_JDK)
+            new Feature(3, "", "", Feature.Status.INCLUDED_IN_JDK),
+            new Feature(1, "", "", Feature.Status.INCLUDED_IN_JDK),
+            new Feature(2, "", "", Feature.Status.INCLUDED_IN_JDK)
         ));
 
         // When

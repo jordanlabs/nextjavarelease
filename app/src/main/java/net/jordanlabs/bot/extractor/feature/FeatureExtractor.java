@@ -1,7 +1,6 @@
 package net.jordanlabs.bot.extractor.feature;
 
 import net.jordanlabs.bot.domain.Feature;
-import net.jordanlabs.bot.domain.FeatureStatus;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -18,29 +17,29 @@ public abstract class FeatureExtractor {
 
     public abstract List<Feature> extractFeatures();
 
-    protected FeatureStatus determineStatus(final Element featureTable) {
+    protected Feature.Status determineStatus(final Element featureTable) {
         final Element featureTitle = featureTable.selectFirst("th.title");
         if (featureTitle != null) {
             final String statusDescription = featureTitle.text();
             if (statusDescription.contains("proposed")) {
-                return FeatureStatus.PROPOSED_FOR_JDK;
+                return Feature.Status.PROPOSED_FOR_JDK;
             } else if (statusDescription.contains("targeted")) {
-                return FeatureStatus.TARGETED_FOR_JDK;
+                return Feature.Status.TARGETED_FOR_JDK;
             }
         }
-        return FeatureStatus.INCLUDED_IN_JDK;
+        return Feature.Status.INCLUDED_IN_JDK;
     }
 
     protected Feature createFeature(final String jepNumber, final String description, final String jepUrl) {
-        return createFeature(jepNumber, description, jepUrl, FeatureStatus.INCLUDED_IN_JDK);
+        return createFeature(jepNumber, description, jepUrl, Feature.Status.INCLUDED_IN_JDK);
     }
 
-    protected Feature createFeature(final String jepNumber, final String description, final String jepUrl, final FeatureStatus featureStatus) {
+    protected Feature createFeature(final String jepNumber, final String description, final String jepUrl, final Feature.Status status) {
         return new Feature(
             jepNumberToInt(jepNumber),
             description,
             jepUrl,
-            featureStatus
+            status
         );
     }
 
