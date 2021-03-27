@@ -35,7 +35,7 @@ class JdkReleaseTest {
         assertThat(isReleasedAfter).isTrue();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "jdk with ga milestone 2021-03-05 is released after {0}: {1}")
     @CsvSource({
         "2021-03-04,true",
         "2021-03-05,false",
@@ -55,7 +55,7 @@ class JdkReleaseTest {
         assertThat(isReleasedAfter).isEqualTo(expected);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "jdk with non-ga milestone 2021-03-05 is released after {0}: {1}")
     @CsvSource({
         "2021-03-04,false",
         "2021-03-05,false",
