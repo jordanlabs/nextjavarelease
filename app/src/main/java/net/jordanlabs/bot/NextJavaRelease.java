@@ -2,6 +2,7 @@ package net.jordanlabs.bot;
 
 import net.jordanlabs.bot.domain.JdkProgress;
 import net.jordanlabs.bot.domain.JdkRelease;
+import net.jordanlabs.bot.domain.ReleaseDate;
 import net.jordanlabs.bot.service.JdkProgressFetcher;
 import net.jordanlabs.bot.service.ProgressAnnouncer;
 
@@ -29,10 +30,12 @@ public class NextJavaRelease {
         final Optional<JdkRelease> nextJavaRelease = jdkProgress.nextJavaRelease(todayDate);
 
         nextJavaRelease.ifPresent(jdkRelease -> {
+            final LocalDate previousReleaseDate = jdkProgress.previousReleaseDateFor(jdkRelease);
+            final ReleaseDate nextReleaseDate = jdkProgress.releaseDateOrEstimate(jdkRelease, previousReleaseDate);
             final String progressBar = progressAnnouncer.generateProgressBar(
-                jdkRelease.previousReleaseDate(),
+                previousReleaseDate,
                 todayDate,
-                jdkRelease.releaseDateOrEstimate(jdkProgress.averageReleaseDayOfMonth()));
+                nextReleaseDate);
             System.out.println(progressBar);
         });
     }
