@@ -26,13 +26,14 @@ class JdkReleaseTest {
     @Test
     void jdkWithNoMilestonesIsReleasedInTheFuture() {
         // Given
-        jdkRelease = newJdkRelease(NO_MILESTONES, NO_FEATURES);
+        jdkRelease = newJdkRelease(NO_MILESTONES);
 
         // When
         var isReleasedAfter = jdkRelease.isReleasedAfter(LocalDate.MAX);
 
         // Then
         assertThat(isReleasedAfter).isTrue();
+        assertThat(jdkRelease.hasReleaseDate()).isFalse();
     }
 
     @ParameterizedTest(name = "jdk with ga milestone 2021-03-05 is released after {0}: {1}")
@@ -41,18 +42,19 @@ class JdkReleaseTest {
         "2021-03-05,false",
         "2021-03-06,false"
     })
-    void jdkIsReleasedAfterWhenMilestoneInTheFuture(LocalDate date, boolean expected) {
+    void jdkIsReleasedAfterDateWhenMilestoneInTheFuture(LocalDate date, boolean expected) {
         // Given
         var milestones = Collections.singletonList(
             new Milestone(LocalDate.of(2021, 3, 5), Phase.GENERAL_AVAILABILITY, "")
         );
-        jdkRelease = newJdkRelease(milestones, NO_FEATURES);
+        jdkRelease = newJdkRelease(milestones);
 
         // When
         var isReleasedAfter = jdkRelease.isReleasedAfter(date);
 
         // Then
         assertThat(isReleasedAfter).isEqualTo(expected);
+        assertThat(jdkRelease.hasReleaseDate()).isTrue();
     }
 
     @ParameterizedTest(name = "jdk with non-ga milestone 2021-03-05 is released after {0}: {1}")
@@ -66,13 +68,14 @@ class JdkReleaseTest {
         var milestones = Collections.singletonList(
             new Milestone(LocalDate.of(2021, 3, 5), Phase.ALL_TESTS_RUN, "")
         );
-        jdkRelease = newJdkRelease(milestones, NO_FEATURES);
+        jdkRelease = newJdkRelease(milestones);
 
         // When
         var isReleasedAfter = jdkRelease.isReleasedAfter(date);
 
         // Then
         assertThat(isReleasedAfter).isEqualTo(expected);
+        assertThat(jdkRelease.hasReleaseDate()).isFalse();
     }
 
     @Test
@@ -83,13 +86,14 @@ class JdkReleaseTest {
             new Milestone(LocalDate.of(2021, 2, 1), Phase.RAMPDOWN_PHASE_TWO, ""),
             new Milestone(LocalDate.of(2021, 1, 1), Phase.RAMPDOWN_PHASE_ONE, "")
         );
-        jdkRelease = newJdkRelease(milestones, NO_FEATURES);
+        jdkRelease = newJdkRelease(milestones);
 
         // When
         var releaseDate = jdkRelease.releaseDate();
 
         // Then
         assertThat(releaseDate).isEqualTo("2021-03-01");
+        assertThat(jdkRelease.hasReleaseDate()).isTrue();
     }
 
     @Test
@@ -99,22 +103,32 @@ class JdkReleaseTest {
             new Milestone(LocalDate.of(2021, 2, 1), Phase.RAMPDOWN_PHASE_TWO, ""),
             new Milestone(LocalDate.of(2021, 1, 1), Phase.RAMPDOWN_PHASE_ONE, "")
         );
-        jdkRelease = newJdkRelease(milestones, NO_FEATURES);
+        jdkRelease = newJdkRelease(milestones);
 
         // When
         var releaseDate = jdkRelease.releaseDate();
 
         // Then
         assertThat(releaseDate).isEqualTo(NO_RELEASE_DATE);
+        assertThat(jdkRelease.hasReleaseDate()).isFalse();
     }
 
-    private JdkRelease newJdkRelease(final List<Milestone> milestones, final List<Feature> features) {
+    @Test
+    void jdkReleaseHasToString() {
+        // Given
+        jdkRelease = newJdkRelease(NO_MILESTONES);
+
+        // When, Then
+        assertThat(jdkRelease).hasToString(String.format("%s (%s)", RELEASE_NUMBER, LATEST_MILESTONE));
+    }
+
+    private JdkRelease newJdkRelease(final List<Milestone> milestones) {
         return new JdkRelease(
             RELEASE_URL,
             RELEASE_NUMBER,
             LATEST_MILESTONE,
             milestones,
-            features,
+            NO_FEATURES,
             PAGE_LAST_UPDATED
         );
     }
