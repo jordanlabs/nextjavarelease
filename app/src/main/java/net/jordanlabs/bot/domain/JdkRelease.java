@@ -9,19 +9,29 @@ import java.util.TreeSet;
 public class JdkRelease {
     public static final LocalDate NO_RELEASE_DATE = LocalDate.EPOCH;
     private final String releaseUrl;
-    private final String latestMilestone;
     private final String releaseNumber;
+    private final String latestMilestone;
+    private final Schedule schedule;
     private final Set<Milestone> milestones = new TreeSet<>();
     private final Set<Feature> features = new TreeSet<>();
     private final LocalDateTime pageLastUpdated;
 
-    public JdkRelease(final String releaseUrl, final String releaseNumber, final String latestMilestone, final List<Milestone> milestones, final List<Feature> features, final LocalDateTime pageLastUpdated) {
+    public JdkRelease(final String releaseUrl, final String releaseNumber, final String latestMilestone, final Schedule schedule, final List<Milestone> milestones, final List<Feature> features, final LocalDateTime pageLastUpdated) {
         this.releaseUrl = releaseUrl;
         this.releaseNumber = releaseNumber;
         this.latestMilestone = latestMilestone;
+        this.schedule = schedule;
         this.milestones.addAll(milestones);
         this.features.addAll(features);
         this.pageLastUpdated = pageLastUpdated;
+    }
+
+    public String releaseNumber() {
+        return releaseNumber;
+    }
+
+    public Schedule schedule() {
+        return schedule;
     }
 
     public boolean isReleasedAfter(final LocalDate date) {

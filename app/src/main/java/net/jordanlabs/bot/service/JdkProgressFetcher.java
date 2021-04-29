@@ -5,6 +5,7 @@ import net.jordanlabs.bot.domain.JdkProgress;
 import net.jordanlabs.bot.domain.JdkRelease;
 import net.jordanlabs.bot.domain.Milestone;
 import net.jordanlabs.bot.domain.Phase;
+import net.jordanlabs.bot.domain.Schedule;
 import net.jordanlabs.bot.extractor.feature.FeatureExtractor;
 import net.jordanlabs.bot.extractor.feature.Features;
 import net.jordanlabs.bot.provider.HtmlParser;
@@ -45,6 +46,7 @@ public class JdkProgressFetcher {
             final String currentMilestone = release.ownText().replaceAll("[()]", ""); // eg. GA 2018/03/20 OR in development
 
             final Document releaseDoc = Jsoup.connect(releaseUrl).get();
+            final Schedule schedule = fetchSchedule(releaseDoc);
             final List<Milestone> milestones = fetchMilestones(releaseDoc);
             final List<Feature> features = fetchFeatures(releaseDoc);
             final LocalDateTime lastUpdated = lastUpdated(releaseDoc);
@@ -52,12 +54,26 @@ public class JdkProgressFetcher {
                 releaseUrl,
                 releaseNumber,
                 currentMilestone,
+                schedule,
                 milestones,
                 features,
                 lastUpdated
             ));
         }
         return new JdkProgress(jdkReleases);
+    }
+
+    private Schedule fetchSchedule(final Document releaseDoc) {
+        // sometimes a schedule will be proposed
+        final Element scheduleLink = releaseDoc.selectFirst("h2#Schedule > a");
+        if (scheduleLink != null) {
+            final String schedule = scheduleLink.ownText().replaceAll("[()]", "");
+            final String scheduleUrl = scheduleLink.attr("abs:href");
+            final String scheduleUrl2 = scheduleLink.absUrl("href");
+            final boolean isProposed = schedule.equalsIgnoreCase("proposed");
+            return new Schedule(isProposed, scheduleUrl);
+        }
+        return new Schedule();
     }
 
     private LocalDateTime lastUpdated(final Document releaseDoc) {

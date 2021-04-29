@@ -2,7 +2,7 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'com.github.ben-manes.versions' version '0.38.0'
-    id 'com.adarshr.test-logger' version '2.1.1'
+    id 'com.adarshr.test-logger' version '3.0.0'
 }
 
 repositories {
@@ -33,6 +33,14 @@ application {
     mainClass = 'net.jordanlabs.bot.App'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(Test) {
+    jvmArgs += '--enable-preview'
 }

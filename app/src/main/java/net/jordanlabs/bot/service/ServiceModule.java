@@ -1,8 +1,11 @@
 package net.jordanlabs.bot.service;
 
+import com.github.redouane59.twitter.TwitterClient;
 import dagger.Module;
 import dagger.Provides;
 import net.jordanlabs.bot.provider.HtmlParser;
+
+import javax.inject.Singleton;
 
 @Module
 public abstract class ServiceModule {
@@ -14,5 +17,11 @@ public abstract class ServiceModule {
     @Provides
     static ProgressAnnouncer progressAnnouncer() {
         return new ProgressAnnouncer();
+    }
+
+    @Provides
+    @Singleton
+    static TwitterClient twitterClient() {
+        return new TwitterClient();
     }
 }

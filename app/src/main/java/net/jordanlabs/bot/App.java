@@ -1,18 +1,21 @@
 package net.jordanlabs.bot;
 
-import com.github.redouane59.twitter.TwitterClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class App {
+    private static final Logger log = LogManager.getLogger(App.class);
+
     public static void main(String[] args)  {
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-        TwitterClient twitterClient = new TwitterClient();
+
         final var nextJavaRelease = NextJavaReleaseFactory.createNextJavaRelease();
         try {
             nextJavaRelease.runTwitterBot();
         } catch (IOException ex) {
-           System.out.println("Failed");
+           log.error("Failed to post tweet", ex);
         }
     }
 

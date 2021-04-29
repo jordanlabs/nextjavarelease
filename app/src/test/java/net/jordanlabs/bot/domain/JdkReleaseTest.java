@@ -17,6 +17,7 @@ class JdkReleaseTest {
     private final static String RELEASE_URL = "https://next.jdk.net/releases/18";
     private final static String RELEASE_NUMBER = "18";
     private static final String LATEST_MILESTONE = "in development";
+    private static final Schedule SCHEDULE = new Schedule();
     private static final LocalDateTime PAGE_LAST_UPDATED = LocalDateTime.of(2021, 1, 2, 3, 4, 0);
     private static final List<Milestone> NO_MILESTONES = Collections.emptyList();
     private static final List<Feature> NO_FEATURES = Collections.emptyList();
@@ -113,20 +114,12 @@ class JdkReleaseTest {
         assertThat(jdkRelease.hasReleaseDate()).isFalse();
     }
 
-    @Test
-    void jdkReleaseHasToString() {
-        // Given
-        jdkRelease = newJdkRelease(NO_MILESTONES);
-
-        // When, Then
-        assertThat(jdkRelease).hasToString(String.format("%s (%s)", RELEASE_NUMBER, LATEST_MILESTONE));
-    }
-
     private JdkRelease newJdkRelease(final List<Milestone> milestones) {
         return new JdkRelease(
             RELEASE_URL,
             RELEASE_NUMBER,
             LATEST_MILESTONE,
+            SCHEDULE,
             milestones,
             NO_FEATURES,
             PAGE_LAST_UPDATED
