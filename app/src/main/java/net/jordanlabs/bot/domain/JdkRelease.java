@@ -30,6 +30,10 @@ public class JdkRelease {
         return releaseNumber;
     }
 
+    public Set<Feature> features() {
+        return features;
+    }
+
     public Schedule schedule() {
         return schedule;
     }

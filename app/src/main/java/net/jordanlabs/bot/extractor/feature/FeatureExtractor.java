@@ -8,6 +8,7 @@ import java.util.List;
 
 public abstract class FeatureExtractor {
     public static final String FEATURES_TABLE_QUERY = "h2#Features + blockquote > table.jeps";
+    public static final String ALL_FEATURE_TABLES_QUERY = "table.jeps";
 
     protected final Document releaseDoc;
 

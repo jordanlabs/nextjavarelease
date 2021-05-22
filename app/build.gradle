@@ -1,12 +1,12 @@
 plugins {
     id 'application'
     id 'jacoco'
+    id 'com.google.cloud.tools.jib' version '3.0.0'
     id 'com.github.ben-manes.versions' version '0.38.0'
     id 'com.adarshr.test-logger' version '3.0.0'
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
