@@ -22,15 +22,17 @@ class NoTableFeatures extends FeatureExtractor {
     public List<Feature> extractFeatures() {
         final List<Feature> features = new ArrayList<>();
         final Element allFeatures = releaseDoc.selectFirst("h2#Features + blockquote");
-        final List<TextNode> featureJeps = allFeatures.textNodes().stream().filter(not(TextNode::isBlank)).collect(Collectors.toUnmodifiableList());
-        final Elements featureLinks = allFeatures.select("a");
-        for (int i = 0; i < featureJeps.size(); i++) {
-            final Element featureLink = featureLinks.get(i);
-            features.add(createFeature(
-                featureJeps.get(i).text(),
-                featureLink.text(),
-                featureLink.attr("abs:href")
-            ));
+        if (allFeatures != null) { // new jdk releases might not even have features in a blockquote
+            final List<TextNode> featureJeps = allFeatures.textNodes().stream().filter(not(TextNode::isBlank)).collect(Collectors.toUnmodifiableList());
+            final Elements featureLinks = allFeatures.select("a");
+            for (int i = 0; i < featureJeps.size(); i++) {
+                final Element featureLink = featureLinks.get(i);
+                features.add(createFeature(
+                    featureJeps.get(i).text(),
+                    featureLink.text(),
+                    featureLink.attr("abs:href")
+                ));
+            }
         }
         return features;
     }
