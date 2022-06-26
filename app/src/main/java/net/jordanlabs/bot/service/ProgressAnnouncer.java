@@ -18,10 +18,18 @@ public class ProgressAnnouncer {
     private static final String FILLED = "⬛";
     private static final String EMPTY = "⬜";
     private static final StringBuffer sb = new StringBuffer();
+
     private static final String progressTweet = """
         #Java #JDK%s
         %s more days until #Java%s is released on %s%s
         %s
+        """;
+
+    private static final String releaseTweet = """
+        #Java #JDK%s
+        #Java%s is released today! ✨🥳☕🚀✨
+        %s
+        See release notes for changes: https://jdk.java.net/18/release-notes
         """;
 
     @Inject
@@ -34,12 +42,19 @@ public class ProgressAnnouncer {
         final String progressBar = generateProgressBar(totalDays, progressedDays);
 
         final Schedule schedule = jdkRelease.schedule();
-        return progressTweet.formatted(
+        if (progressedDays < totalDays) {
+            return progressTweet.formatted(
+                jdkRelease.releaseNumber(),
+                todayDate.until(releaseDate.releaseDate(), ChronoUnit.DAYS),
+                jdkRelease.releaseNumber(),
+                releaseDate.releaseDate().format(RELEASE_DATE_FORMAT),
+                releaseDate.isEstimate() ? " (estimated)" : schedule.isProposed() ? " (proposed)" : "",
+                progressBar
+            );
+        }
+        return releaseTweet.formatted(
             jdkRelease.releaseNumber(),
-            todayDate.until(releaseDate.releaseDate(), ChronoUnit.DAYS),
             jdkRelease.releaseNumber(),
-            releaseDate.releaseDate().format(RELEASE_DATE_FORMAT),
-            releaseDate.isEstimate() ? " (estimate)" : schedule.isProposed() ? " (proposed)" : "",
             progressBar
         );
     }

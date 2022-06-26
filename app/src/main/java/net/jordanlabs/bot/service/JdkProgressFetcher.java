@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,7 +40,7 @@ public class JdkProgressFetcher {
     public JdkProgress fetchProgress(final String jdkProjectUrl) throws IOException {
         final Document doc = htmlParser.loadDocumentFrom(jdkProjectUrl);
         final Element releases = doc.selectFirst("div#main > ul");
-        final List<JdkRelease> jdkReleases = new ArrayList<>();
+        final Deque<JdkRelease> jdkReleases = new LinkedList<>();
         for (Element release : releases.select("li")) {
             final Element releaseLink = release.selectFirst("a");
             final String releaseUrl = releaseLink.attr("abs:href");
@@ -50,7 +52,7 @@ public class JdkProgressFetcher {
             final List<Milestone> milestones = fetchMilestones(releaseDoc);
             final List<Feature> features = fetchFeatures(releaseDoc);
             final LocalDateTime lastUpdated = lastUpdated(releaseDoc);
-            jdkReleases.add(new JdkRelease(
+            jdkReleases.addFirst(new JdkRelease(
                 releaseUrl,
                 releaseNumber,
                 currentMilestone,

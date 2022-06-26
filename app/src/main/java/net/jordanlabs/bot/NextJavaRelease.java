@@ -1,6 +1,6 @@
 package net.jordanlabs.bot;
 
-import com.github.redouane59.twitter.TwitterClient;
+import io.github.redouane59.twitter.TwitterClient;
 import net.jordanlabs.bot.domain.JdkProgress;
 import net.jordanlabs.bot.domain.JdkRelease;
 import net.jordanlabs.bot.domain.ReleaseDate;
@@ -29,11 +29,11 @@ public class NextJavaRelease {
         this.jdkProgressFetcher = jdkProgressFetcher;
         this.progressAnnouncer = progressAnnouncer;
         this.twitterClient = twitterClient;
-        this.properties = loader.loadProperties("config.properties");
+        this.properties = loader.loadProperties();
     }
 
-    public void runTwitterBot() throws IOException {
-        final JdkProgress jdkProgress = jdkProgressFetcher.fetchProgress(properties.getProperty("openjdk.project.url"));
+    public void runTwitterBot(final AppArgs appArgs) throws IOException {
+        final JdkProgress jdkProgress = jdkProgressFetcher.fetchProgress(properties.getProperty("openjdk.project.url", ""));
 
         final LocalDate todayDate = LocalDate.now(ZoneOffset.UTC);
         final Optional<JdkRelease> nextJavaRelease = jdkProgress.nextJavaRelease(todayDate);
@@ -49,7 +49,11 @@ public class NextJavaRelease {
             );
 
             System.out.println(releaseTweet);
-            twitterClient.postTweet(releaseTweet);
+            if (!appArgs.isDryRun()) {
+                twitterClient.postTweet(releaseTweet);
+            }
+            var twitterUser = twitterClient.getUserFromUserName("nextjavarelease");
+            System.out.printf("Number of followers: %d%n", twitterUser.getFollowersCount());
         });
     }
 

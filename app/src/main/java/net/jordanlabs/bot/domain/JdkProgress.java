@@ -2,6 +2,8 @@ package net.jordanlabs.bot.domain;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,20 +11,20 @@ public class JdkProgress {
     private static final int DAYS_IN_THREE_MONTHS = 3 * 30;
     private final List<JdkRelease> jdkReleases;
 
-    public JdkProgress(final List<JdkRelease> jdkReleases) {
-        this.jdkReleases = jdkReleases;
+    public JdkProgress(final Collection<JdkRelease> jdkReleases) {
+        this.jdkReleases = new ArrayList<>(jdkReleases);
     }
 
     /**
      * The next Java release is either: the first
-     * - release with a generally available date after today
+     * - release with a generally available date today or after
      * - release that doesn't have a generally available date
      * @param todayDate Date for today, UTC
      * @return The upcoming JdkRelease or empty
      */
     public Optional<JdkRelease> nextJavaRelease(final LocalDate todayDate) {
         for (final JdkRelease release : jdkReleases) {
-            if (release.isReleasedAfter(todayDate)) {
+            if (release.isReleasedOnOrAfter(todayDate)) {
                 return Optional.of(release);
             }
         }

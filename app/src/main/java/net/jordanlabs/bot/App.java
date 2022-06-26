@@ -10,10 +10,10 @@ public class App {
 
     public static void main(String[] args)  {
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-
+        final var appArgs = AppArgs.parseArgs(args);
         final var nextJavaRelease = NextJavaReleaseFactory.createNextJavaRelease();
         try {
-            nextJavaRelease.runTwitterBot();
+            nextJavaRelease.runTwitterBot(appArgs);
         } catch (IOException ex) {
            log.error("Failed to post tweet", ex);
         }
