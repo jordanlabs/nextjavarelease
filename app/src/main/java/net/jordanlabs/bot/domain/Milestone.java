@@ -36,6 +36,10 @@ public class Milestone implements Comparable<Milestone>{
         return milestoneDate.isAfter(date);
     }
 
+    public boolean isOnOrAfter(final LocalDate date) {
+        return milestoneDate.isEqual(date) || milestoneDate.isAfter(date);
+    }
+
     @Override
     public int compareTo(final Milestone other) {
         return milestoneDate.compareTo(other.milestoneDate);

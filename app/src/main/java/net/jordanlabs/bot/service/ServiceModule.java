@@ -1,6 +1,6 @@
 package net.jordanlabs.bot.service;
 
-import com.github.redouane59.twitter.TwitterClient;
+import io.github.redouane59.twitter.TwitterClient;
 import dagger.Module;
 import dagger.Provides;
 import net.jordanlabs.bot.provider.HtmlParser;

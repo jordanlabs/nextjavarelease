@@ -38,12 +38,24 @@ public class JdkRelease {
         return schedule;
     }
 
-    public boolean isReleasedAfter(final LocalDate date) {
+    public boolean isReleasedOnOrAfter(final LocalDate referenceDate) {
         if (milestones.isEmpty()) {
             return true;
         }
         for (final Milestone milestone : milestones) {
-            if (milestone.isGenerallyAvailable() && milestone.isAfter(date)) {
+            if (milestone.isGenerallyAvailable() && milestone.isOnOrAfter(referenceDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isReleasedAfter(final LocalDate referenceDate) {
+        if (milestones.isEmpty()) {
+            return true;
+        }
+        for (final Milestone milestone : milestones) {
+            if (milestone.isGenerallyAvailable() && milestone.isAfter(referenceDate)) {
                 return true;
             }
         }
@@ -67,4 +79,5 @@ public class JdkRelease {
     public String toString() {
         return String.format("%s (%s)", releaseNumber, latestMilestone);
     }
+
 }
